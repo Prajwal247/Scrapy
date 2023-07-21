@@ -2,7 +2,7 @@ name: Scheduled Spider
 
 on:
   schedule:
-    - cron: "2 11 * * *"  
+    - cron: "2 12 * * *"
 
 jobs:
   run_scrapy:
@@ -15,7 +15,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.10.6  
+        python-version: 3.10.6
 
     - name: Install Scrapy and other dependencies
       run: |
@@ -24,4 +24,6 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Scrapy Spider
-      run: scrapy crawl nepalicalender  
+      run: |
+        cd vegetable_price  
+        scrapy crawl nepalicalender
