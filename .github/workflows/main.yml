@@ -2,7 +2,7 @@ name: Scheduled Spider
 
 on:
   schedule:
-    - cron: "2 12 * * *"
+    - cron: "20 17 * * *"
 
 jobs:
   run_scrapy:
@@ -27,3 +27,7 @@ jobs:
       run: |
         cd vegetable_price  
         scrapy crawl nepalicalender
+        git add .
+        git commit -m "updated the vegetable prices"
+        git remote add origin git@github.com:Prajwal247/Scrapy.git
+        git push origin -u master
