@@ -2,7 +2,7 @@ name: Scheduled Spider
 
 on:
   schedule:
-    - cron: "26 10 * * *"  
+    - cron: "47 10 * * *"  
 
 jobs:
   run_scrapy:
