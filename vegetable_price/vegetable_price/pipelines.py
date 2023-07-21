@@ -1,13 +1,20 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+from pymongo import MongoClient
+from scrapy.settings import Settings
 
+class MongoDBPipeline(object):
 
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+    def __init__(self):
+        settings = Settings()
+        connection = MongoClient(
+            settings.get('MONGODB_SERVER'),
+            settings.get('MONGODB_PORT')
+        )
+        db_name = str(settings.get('MONGODB_DB'))
+        db = connection[db_name]
 
+        self.collection = db[str(settings.get('MONGODB_COLLECTION'))]
 
-class VegetablePricePipeline:
     def process_item(self, item, spider):
+        print(item)
+        self.collection.insert(dict(item))
         return item

@@ -1,0 +1,26 @@
+name: Scheduled Spider
+
+on:
+  schedule:
+    - cron: "0 23 * * *"  
+
+jobs:
+  run_scrapy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x  # Replace with the desired Python version (e.g., 3.7, 3.8, 3.9)
+
+    - name: Install Scrapy and other dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install scrapy  # Install Scrapy and any other required packages
+
+    - name: Run Scrapy Spider
+      run: scrapy crawl your_spider_name  # Replace "your_spider_name" with the name of your Scrapy spider
