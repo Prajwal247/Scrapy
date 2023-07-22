@@ -6,9 +6,15 @@ import os
 class NepalicalenderSpider(scrapy.Spider):
     name = "nepalicalender"
     allowed_domains = ["nepalicalendar.rat32.com"]
-    start_urls = ["https://nepalicalendar.rat32.com/vegetable"]
+    start_urls = ["https://nepalicalendar.rat32.com"]
 
     def parse(self, response):
+        vegetable_link = response.xpath('//a[@title="kalimati Vegetable Rates"]')
+        sub_url = vegetable_link.xpath('@href').get()
+        yield response.follow(sub_url, callback=self.parse_vegetable_price, meta={'name': vegetable_link})
+
+
+    def parse_vegetable_price(self, response):
         date = response.xpath(
             '//*[@id="vtitle"]/text()').extract_first().split('-')[-1].strip()
         title = response.xpath('//*[@id="vtitle"]/text()').extract_first()
