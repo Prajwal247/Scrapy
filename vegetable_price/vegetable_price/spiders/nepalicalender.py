@@ -9,31 +9,35 @@ class NepalicalenderSpider(scrapy.Spider):
     start_urls = ["https://nepalicalendar.rat32.com/vegetable"]
 
     def parse(self, response):
-        date = response.xpath('//*[@id="vtitle"]/text()').extract_first().split('-')[-1].strip()
+        date = response.xpath(
+            '//*[@id="vtitle"]/text()').extract_first().split('-')[-1].strip()
         title = response.xpath('//*[@id="vtitle"]/text()').extract_first()
-        table_headers = [element.split(" ")[0] for element in response.xpath('//*[@id="commodityDailyPrice"]/thead/tr/th/text()').extract()] + ["Date"]
-        vegetables_data =  response.xpath('//*[@id="commodityDailyPrice"]/tbody/tr/td/text()').extract()
+        table_headers = [element.split(" ")[0] for element in response.xpath(
+            '//*[@id="commodityDailyPrice"]/thead/tr/th/text()').extract()] + ["Date"]
+        vegetables_data = response.xpath(
+            '//*[@id="commodityDailyPrice"]/tbody/tr/td/text()').extract()
         vegetables_names = vegetables_data[::5]
-        units =  vegetables_data[1::5]
-        minimum_price =  vegetables_data[2::5]
-        maximum_price =  vegetables_data[3::5]
-        average_price =  vegetables_data[4::5]
+        units = vegetables_data[1::5]
+        minimum_price = vegetables_data[2::5]
+        maximum_price = vegetables_data[3::5]
+        average_price = vegetables_data[4::5]
 
         # Sample scraped data (dictionary format)
         scraped_data = {
             'Title': title,
             'Date': date,
             'table_headers': table_headers,
-            'vegetables_names': vegetables_names,  
-            'units': units,  
+            'vegetables_names': vegetables_names,
+            'units': units,
             'minimum_price': minimum_price,
-            'maximum_price': maximum_price,  
-            'average': average_price,  
+            'maximum_price': maximum_price,
+            'average': average_price,
         }
 
         # Extract the table headers and rows
         table_headers = scraped_data['table_headers']
-        rows = list(zip(scraped_data['vegetables_names'], scraped_data['units'], scraped_data['minimum_price'], scraped_data['maximum_price'], scraped_data['average'],[scraped_data['Date']] * len(scraped_data['vegetables_names'])))
+        rows = list(zip(scraped_data['vegetables_names'], scraped_data['units'], scraped_data['minimum_price'],
+                    scraped_data['maximum_price'], scraped_data['average'], [scraped_data['Date']] * len(scraped_data['vegetables_names'])))
 
         # Define the file name for the CSV file
         file_name = 'vegetables_price.csv'
@@ -54,14 +58,13 @@ class NepalicalenderSpider(scrapy.Spider):
                 with open(file_name, 'a', newline='') as csvfile:
                     csv_writer = csv.writer(csvfile)
                     csv_writer.writerows(rows)  # Append the new rows
+                yield scraped_data
         else:
             # File doesn't exist, so we'll create a new file and write the data
             with open(file_name, 'w', newline='') as csvfile:
                 csv_writer = csv.writer(csvfile)
                 csv_writer.writerow(table_headers)  # Write the headers
                 csv_writer.writerows(rows)  # Write the rows
+            yield scraped_data
 
         print(f"Scraped data has been updated and saved to {file_name}.")
-
-        yield scraped_data
-
