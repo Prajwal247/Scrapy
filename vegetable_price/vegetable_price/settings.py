@@ -9,6 +9,7 @@
 
 BOT_NAME = "vegetable_price"
 
+
 SPIDER_MODULES = ["vegetable_price.spiders"]
 NEWSPIDER_MODULE = "vegetable_price.spiders"
 
@@ -66,10 +67,9 @@ ITEM_PIPELINES = {
    "vegetable_price.pipelines.MongoDBPipeline": 300,
 }
 
-MONGODB_SERVER = 'localhost'
-MONGODB_PORT = 27017
-MONGODB_DB = 'vegetables'
-MONGODB_COLLECTION = 'prices'
+MONGO_URI = 'mongodb://127.0.0.1:27017/'
+MONGO_DATABASE = 'vegetables'
+MONGO_COLLECTION = 'vegetables_price'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

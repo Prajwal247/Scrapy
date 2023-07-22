@@ -63,3 +63,5 @@ class NepalicalenderSpider(scrapy.Spider):
 
         print(f"Scraped data has been updated and saved to {file_name}.")
 
+        yield scraped_data
+
