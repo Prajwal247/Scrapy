@@ -40,37 +40,6 @@ class NepalicalenderSpider(scrapy.Spider):
             'average': average_price,
         }
 
-        # Extract the table headers and rows
-        table_headers = scraped_data['table_headers']
-        rows = list(zip(scraped_data['vegetables_names'], scraped_data['units'], scraped_data['minimum_price'],
-                    scraped_data['maximum_price'], scraped_data['average'], [scraped_data['Date']] * len(scraped_data['vegetables_names'])))
+        yield scraped_data
 
-        # Define the file name for the CSV file
-        file_name = 'vegetables_price.csv'
 
-        # Check if the file exists
-        if os.path.exists(file_name):
-            # Read the last row's date from the existing CSV file
-            with open(file_name, 'r') as csvfile:
-                csv_reader = csv.reader(csvfile)
-                last_row = None
-                for row in csv_reader:
-                    last_row = row
-                last_row_date = last_row[-1] if last_row else None
-
-            # Check if the last row's date is not equal to the current date
-            if last_row_date != scraped_data['Date']:
-                # File exists, and the date is different, so we'll append the new data
-                with open(file_name, 'a', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile)
-                    csv_writer.writerows(rows)  # Append the new rows
-                yield scraped_data
-        else:
-            # File doesn't exist, so we'll create a new file and write the data
-            with open(file_name, 'w', newline='') as csvfile:
-                csv_writer = csv.writer(csvfile)
-                csv_writer.writerow(table_headers)  # Write the headers
-                csv_writer.writerows(rows)  # Write the rows
-            yield scraped_data
-
-        print(f"Scraped data has been updated and saved to {file_name}.")

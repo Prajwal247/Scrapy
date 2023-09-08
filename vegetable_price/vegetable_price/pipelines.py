@@ -1,31 +1,18 @@
-import logging
 import pymongo
 
 class MongoDBPipeline:
-    def __init__(self, mongo_uri, mongo_db, mongo_collection):
-        self.mongo_uri = mongo_uri
-        self.mongo_db = mongo_db
-        self.mongo_collection = mongo_collection
+    collection_name = 'prices'  # Replace with your desired collection name
+    db_name = 'vegetable_prices'  # Replace with your desired database name
 
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            mongo_uri=crawler.settings.get('MONGO_URI'),
-            mongo_db=crawler.settings.get('MONGO_DATABASE'),
-            mongo_collection=crawler.settings.get('MONGO_COLLECTION')
-        )
-
-    def open_spider(self, spider):
+    def __init__(self):
+        self.mongo_uri = 'mongodb+srv://prazzwalthapa87:Ohmygod123@cluster0.1fwe1vz.mongodb.net'
         self.client = pymongo.MongoClient(self.mongo_uri)
-        self.db = self.client[self.mongo_db]
-
-    def close_spider(self, spider):
-        self.client.close()
+        self.db = self.client[self.db_name]  # Access the desired database
+        self.collection = self.db[self.collection_name]  # Access the desired collection
 
     def process_item(self, item, spider):
-        # Log the item being processed
-        logging.debug("Processing item: %s", item)
-        
-        # Insert the item into MongoDB
-        self.db[self.mongo_collection].insert_one(dict(item))
+        try:
+            self.collection.insert_one(dict(item))
+        except Exception as e:
+            self.logger.error(f"Error processing item: {e}")
         return item

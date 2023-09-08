@@ -67,9 +67,9 @@ ITEM_PIPELINES = {
    "vegetable_price.pipelines.MongoDBPipeline": 300,
 }
 
-MONGO_URI = 'mongodb://127.0.0.1:27017/'
-MONGO_DATABASE = 'vegetables'
-MONGO_COLLECTION = 'vegetables_price'
+MONGO_URI = 'mongodb+srv://prazzwalthapa87:<password>@cluster0.1fwe1vz.mongodb.net/?retryWrites=true&w=majority'
+MONGO_DATABASE = 'vegetables_price'
+MONGO_COLLECTION = 'price'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
